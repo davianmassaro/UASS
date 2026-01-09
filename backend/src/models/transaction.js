@@ -1,14 +1,14 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./User');
-const Product = require('./Product');
+const User = require('./user');
+const Product = require('./product');
 
 const Transaction = sequelize.define('Transaction', {
-  type: {
-    type: DataTypes.ENUM('IN', 'OUT'),
-    allowNull: false
-  },
-  quantity: DataTypes.INTEGER
+    type: {
+        type: DataTypes.ENUM('IN', 'OUT'),
+        allowNull: false
+    },
+    quantity: DataTypes.INTEGER
 });
 
 Transaction.belongsTo(User, { foreignKey: 'user_id' });
