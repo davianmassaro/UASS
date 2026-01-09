@@ -1,20 +1,30 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./user');
-const Product = require('./product');
+const { Model, DataTypes } = require('sequelize');
 
-const Transaction = sequelize.define('Transaction', {
-    type: {
+module.exports = (sequelize) => {
+  class Transaction extends Model {}
+
+  Transaction.init(
+    {
+      type: {
         type: DataTypes.ENUM('IN', 'OUT'),
         allowNull: false
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
-    quantity: DataTypes.INTEGER
-});
+    {
+      sequelize,
+      modelName: 'Transaction',
+      tableName: 'transactions'
+    }
+  );
 
-Transaction.belongsTo(User, { foreignKey: 'user_id' });
-Transaction.belongsTo(Product, { foreignKey: 'product_id' });
+  Transaction.associate = (models) => {
+    Transaction.belongsTo(models.Product, { foreignKey: 'product_id' });
+    Transaction.belongsTo(models.User, { foreignKey: 'user_id' });
+  };
 
-User.hasMany(Transaction, { foreignKey: 'user_id' });
-Product.hasMany(Transaction, { foreignKey: 'product_id' });
-
-module.exports = Transaction;
+  return Transaction;
+};

@@ -1,14 +1,9 @@
 require('dotenv').config();
-const app = require('./app');
-const sequelize = require('./models');
+const app = require('./app'); // pakai app.js yang sudah mendaftarkan semua route
+const db = require('./models');
 
-const PORT = process.env.PORT || 3000;
+db.sequelize.authenticate()
+  .then(() => console.log('Database connected'))
+  .catch(err => console.error('DB error:', err));
 
-sequelize.sync({ alter: true })
-  .then(() => {
-    console.log('Database connected');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => console.error(err));
+app.listen(3000, () => console.log('Server running on port 3000'));
